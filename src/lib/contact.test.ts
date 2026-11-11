@@ -11,6 +11,9 @@ const valid = {
   message: "We need a new site for our bakery.",
 };
 
+const without = (...keys: string[]) =>
+  Object.fromEntries(Object.entries(valid).filter(([k]) => !keys.includes(k)));
+
 test("accepts a complete inquiry", () => {
   assert.equal(contactSchema.safeParse(valid).success, true);
 });
@@ -36,6 +39,41 @@ test("rejects options that are not on the form", () => {
     contactSchema.safeParse({ ...valid, budget: "$1" }).success,
     false,
   );
+});
+
+test("budget and timeline are optional but still checked when given", () => {
+  // Astro turns an unchosen optional radio group into undefined.
+  const rest = without("budget", "timeline");
+  assert.equal(contactSchema.safeParse(rest).success, true);
+  assert.equal(
+    contactSchema.safeParse({ ...rest, budget: undefined, timeline: undefined })
+      .success,
+    true,
+  );
+  assert.equal(
+    contactSchema.safeParse({ ...valid, timeline: "Yesterday" }).success,
+    false,
+  );
+  assert.equal(
+    contactSchema.safeParse({ ...valid, budget: null }).success,
+    false,
+  );
+});
+
+test("project type, name, email and message stay required", () => {
+  for (const key of ["projectType", "name", "email", "message"] as const) {
+    assert.equal(contactSchema.safeParse(without(key)).success, false, key);
+  }
+});
+
+test("inquiry email says 'Not given' for an empty budget or timeline", () => {
+  const data = contactSchema.parse(without("budget", "timeline"));
+  const { text } = buildInquiryEmail(data);
+  assert.match(text, /^Budget: Not given$/m);
+  assert.match(text, /^Timeline: Not given$/m);
+  const full = buildInquiryEmail(contactSchema.parse(valid)).text;
+  assert.match(full, /^Budget: Not sure yet$/m);
+  assert.match(full, /^Timeline: No fixed date$/m);
 });
 
 test("inquiry subject is one line even if the name has line breaks", () => {

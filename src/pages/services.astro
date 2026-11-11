@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import Stage from "../components/home/Stage.astro";
 import StartButton from "../components/StartButton.astro";
-import { services } from "../data/services";
+import { kindScreen, services } from "../data/services";
 
 const gutter = "px-4 sm:px-[clamp(1rem,5vw,4.5rem)]";
 ---
@@ -90,7 +90,7 @@ const gutter = "px-4 sm:px-[clamp(1rem,5vw,4.5rem)]";
         </div>
         {s.kind !== "care" && (
           <div class="mx-auto w-full max-w-[26rem] self-center">
-            <Stage solo={s.kind} />
+            <Stage solo={kindScreen[s.kind]} />
           </div>
         )}
       </div>

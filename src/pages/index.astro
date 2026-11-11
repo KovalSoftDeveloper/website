@@ -4,7 +4,7 @@ import Stage from "../components/home/Stage.astro";
 import StartButton from "../components/StartButton.astro";
 import Steps from "../components/Steps.astro";
 import ClosingCta from "../components/ClosingCta.astro";
-import { services } from "../data/services";
+import { kindScreen, services } from "../data/services";
 import WorkSlot from "../components/WorkSlot.astro";
 
 const plus = "M5 12h14M12 5v14";
@@ -18,24 +18,26 @@ const plus = "M5 12h14M12 5v14";
     aria-labelledby="hero-title"
     class="grid gap-y-10 overflow-x-clip px-4 pt-10 pb-16 sm:px-[clamp(1rem,5vw,4.5rem)] lg:min-h-[calc(100dvh-6rem)] lg:grid-cols-[minmax(0,35rem)_1fr] lg:gap-x-2 lg:pt-0 lg:pb-10"
   >
-    <div class="lg:pt-[clamp(3rem,8.5vh,5rem)]">
+    <!-- top pad shrinks on short screens so all four rows fit, one open, at 900px -->
+    <div class="lg:pt-[clamp(1rem,16vh_-_7.5rem,5rem)]">
       <h1
         id="hero-title"
         class="text-[clamp(2.375rem,4.1vw,3.625rem)] leading-[1.02] font-bold tracking-[-0.03em]"
       >
         We build the software your business runs on.
       </h1>
-      <p class="mt-5 max-w-[27ch] text-xl leading-snug text-haze lg:text-2xl">
+      <p class="mt-5 max-w-[27ch] text-xl leading-snug text-haze lg:max-w-[34ch] lg:text-2xl">
         Websites, web apps, business tools and mobile apps. Built from scratch,
         in plain words, with one contact the whole way.
       </p>
       <StartButton class="mt-8" />
 
-      <div class="mt-10 lg:hidden">
-        <Stage />
+      <!-- one readable screen on narrow viewports; rows show the other three -->
+      <div class="mt-10 max-w-[30rem] lg:hidden">
+        <Stage solo="bookings" />
       </div>
 
-      <div class="mt-10 max-w-[30rem]" data-services>
+      <div class="mt-10 max-w-[30rem] lg:mt-8" data-services>
         <h2 class="sr-only">What we build</h2>
         {services.map((s) => (
           <details
@@ -43,7 +45,7 @@ const plus = "M5 12h14M12 5v14";
             data-kind={s.kind}
             class="group border-t-2 border-rule"
           >
-            <summary class="flex cursor-pointer list-none items-center gap-4 py-3 [&::-webkit-details-marker]:hidden">
+            <summary class="flex cursor-pointer list-none items-center gap-4 py-3 lg:py-2.5 [&::-webkit-details-marker]:hidden">
               <span class="text-[1.375rem] font-semibold leading-tight lg:text-2xl">
                 {s.name}
               </span>
@@ -60,7 +62,7 @@ const plus = "M5 12h14M12 5v14";
                 <path d={plus} />
               </svg>
             </summary>
-            <div class="pb-5 text-lg leading-relaxed text-haze">
+            <div class="pb-5 text-lg leading-relaxed text-haze lg:leading-normal">
               <p>
                 <span class="font-semibold text-white">Good for: </span>
                 {s.forWho}
@@ -78,7 +80,7 @@ const plus = "M5 12h14M12 5v14";
               </ul>
               {s.kind !== "care" && (
                 <div class="mt-5 lg:hidden">
-                  <Stage solo={s.kind} />
+                  <Stage solo={kindScreen[s.kind]} />
                 </div>
               )}
               <a
@@ -115,7 +117,7 @@ const plus = "M5 12h14M12 5v14";
       know what you're getting.
     </p>
     <div class="mt-14">
-      <Steps />
+      <Steps brief />
     </div>
   </section>
 

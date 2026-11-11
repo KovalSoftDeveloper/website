@@ -1,13 +1,14 @@
 ---
 // Decorative example screens (fictional businesses, each tagged "Example").
 // Drawn on an 860x760 grid; --u is one grid px at the rendered width.
-// `solo` renders one screen flat, for the service rows on narrow viewports.
+// `solo` renders one screen flat and full width, for narrow viewports.
+// data-kind names the service row that lifts a screen; the tracker has none,
+// so on desktop each open row lifts exactly one screen.
 interface Props {
-  solo?: string;
+  solo?: "bookings" | "phone" | "tracker" | "site";
 }
 const { solo } = Astro.props;
-const show = (kind: string) => !solo || solo === kind;
-const basis = solo === "web" ? 380 : 400;
+const show = (screen: string) => !solo || solo === screen;
 const bookings = [
   ["A. Patel", "Consultation", "Mon 9:00", true],
   ["J. Moreau", "Follow-up", "Mon 11:30", false],
@@ -44,12 +45,8 @@ const jobs = [
 ---
 
 <div class:list={["wrap", { solo }]} aria-hidden="true">
-  <div
-    class="stage"
-    data-stage={solo ? undefined : ""}
-    style={`--basis:${basis}`}
-  >
-    {!solo && (
+  <div class="stage" data-stage={solo ? undefined : ""}>
+    {show("bookings") && (
       <div class="scr big" data-kind="apps" style="--i:0">
         <div class="bar">
           <i></i>
@@ -97,7 +94,7 @@ const jobs = [
         </div>
       </div>
     )}
-    {show("mobile") && (
+    {show("phone") && (
       <div class="phone" data-kind="mobile" style="--i:1">
         <div class="in">
           <p class="h4">Book a time</p>
@@ -116,8 +113,8 @@ const jobs = [
         </div>
       </div>
     )}
-    {show("apps") && (
-      <div class="scr tracker" data-kind="apps" style="--i:2">
+    {show("tracker") && (
+      <div class="scr tracker" style="--i:2">
         <div class="bar">
           <i></i>
           <i></i>
@@ -148,7 +145,7 @@ const jobs = [
         </div>
       </div>
     )}
-    {show("web") && (
+    {show("site") && (
       <div class="scr web" data-kind="web" style="--i:3">
         <div class="bar">
           <i></i>
@@ -247,12 +244,13 @@ const jobs = [
     }
   }
 
-  /* one screen, flat, inside an opened service row */
+  /* one screen, flat and full width, on narrow viewports. A 360-unit grid
+     puts 12u text at about 12px on a 390px phone. */
   .wrap.solo {
     aspect-ratio: auto;
   }
   .solo .stage {
-    --u: calc(100cqw / var(--basis));
+    --u: calc(100cqw / 360);
     perspective: none;
   }
   .solo .stage > * {
@@ -261,8 +259,24 @@ const jobs = [
     margin-inline: auto;
     transform: none;
     rotate: none;
-    animation: none;
     box-shadow: 0 calc(12 * var(--u)) calc(30 * var(--u)) rgb(0 0 0 / 0.4);
+  }
+  /* row screens appear on demand; only the hero's bookings screen settles on load */
+  .solo .stage > :not(.big) {
+    animation: none;
+  }
+  .solo .scr {
+    width: 100%;
+    height: auto;
+  }
+  .solo .app {
+    grid-template-columns: 1fr;
+  }
+  .solo .side {
+    display: none;
+  }
+  .solo .main {
+    max-width: none;
   }
 
   /* screen chrome */

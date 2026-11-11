@@ -12,6 +12,13 @@ export interface Service {
   includes: string[];
 }
 
+// The single example screen each service shows on narrow layouts and /services.
+export const kindScreen = {
+  web: "site",
+  apps: "tracker",
+  mobile: "phone",
+} as const;
+
 export const services: Service[] = [
   {
     id: "websites",

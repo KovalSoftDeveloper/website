@@ -17,11 +17,19 @@ const formError =
 
 const choiceGroups = [
   { name: "projectType", legend: "What do you need?", options: projectTypes },
-  { name: "budget", legend: "Budget (CAD)", options: budgets },
+  {
+    name: "budget",
+    legend: "Budget",
+    note: "CAD, optional",
+    options: budgets,
+    optional: true,
+  },
   {
     name: "timeline",
     legend: "When do you want to start?",
     options: timelines,
+    note: "optional",
+    optional: true,
   },
 ];
 const gutter = "px-4 sm:px-[clamp(1rem,5vw,4.5rem)]";
@@ -31,7 +39,7 @@ const field =
 
 <Base
   title="Start a project | KovalSoft"
-  description="Tell us about your project. The first conversation is free and we reply within one business day."
+  description="Tell us about your project. Start with a free first conversation."
 >
   <section
     aria-labelledby="contact-title"
@@ -133,32 +141,48 @@ const field =
           </div>
 
           {choiceGroups.map((g) => (
-            <fieldset
-              class="mt-8"
-              aria-describedby={`${g.name}-error`}
-              aria-invalid={fieldErrors[g.name] ? "true" : undefined}
-            >
-              <legend class="text-lg font-semibold">{g.legend}</legend>
-              <div class="mt-3 flex flex-wrap gap-2.5">
-                {g.options.map((option) => (
-                  <label class="cursor-pointer rounded-xl border-2 border-rule px-4 py-2.5 font-semibold text-haze hover:border-quiet has-checked:border-sky has-checked:bg-sky has-checked:text-ink has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-sky">
-                    <input
-                      type="radio"
-                      name={g.name}
-                      value={option}
-                      required
-                      class="sr-only"
-                    />
-                    {option}
-                  </label>
-                ))}
-              </div>
-              <FieldError
-                id={`${g.name}-error`}
-                for={g.name}
-                message={fieldErrors[g.name]?.[0]}
-              />
-            </fieldset>
+            <Fragment>
+              {g.name === "budget" && (
+                <p
+                  id="optional-why"
+                  class="mt-8 text-lg leading-relaxed text-haze"
+                >
+                  A rough answer to the next two questions helps us reply with
+                  something realistic.
+                </p>
+              )}
+              <fieldset
+                class:list={[g.name === "budget" ? "mt-4" : "mt-8"]}
+                aria-describedby={`${g.optional ? "optional-why " : ""}${g.name}-error`}
+                aria-invalid={fieldErrors[g.name] ? "true" : undefined}
+              >
+                <legend class="text-lg font-semibold">
+                  {g.legend}
+                  {g.note && (
+                    <span class="font-normal text-haze"> ({g.note})</span>
+                  )}
+                </legend>
+                <div class="mt-3 flex flex-wrap gap-2.5">
+                  {g.options.map((option) => (
+                    <label class="cursor-pointer rounded-xl border-2 border-rule px-4 py-2.5 font-semibold text-haze hover:border-quiet has-checked:border-sky has-checked:bg-sky has-checked:text-ink has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-sky">
+                      <input
+                        type="radio"
+                        name={g.name}
+                        value={option}
+                        required={!g.optional}
+                        class="sr-only"
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </div>
+                <FieldError
+                  id={`${g.name}-error`}
+                  for={g.name}
+                  message={fieldErrors[g.name]?.[0]}
+                />
+              </fieldset>
+            </Fragment>
           ))}
 
           <div class="mt-8">
@@ -217,14 +241,10 @@ const field =
         </h2>
         <ol class="mt-5 text-lg leading-relaxed text-haze">
           <li class="border-t-2 border-rule py-4">
-            We reply within one business day to set up a free first
-            conversation.
-          </li>
-          <li class="border-t-2 border-rule py-4">
-            You get a written plan and a fixed quote before anything is built.
+            We read your message and set up a first conversation.
           </li>
           <li class="border-y-2 border-rule py-4">
-            One point of contact from then on, through launch and after.
+            You get a written plan and a fixed quote before anything is built.
           </li>
         </ol>
         {PUBLIC_CONTACT_EMAIL && (

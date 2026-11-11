@@ -22,7 +22,7 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
           <a
             href={href}
             aria-current={path === href ? "page" : undefined}
-            class="text-white underline-offset-[6px] decoration-2 decoration-sky hover:underline aria-[current=page]:underline"
+            class="inline-flex min-h-6 items-center text-white underline-offset-[6px] decoration-2 decoration-sky hover:underline aria-[current=page]:underline"
           >
             {label}
           </a>

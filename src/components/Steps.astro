@@ -1,4 +1,11 @@
 ---
+const { brief = false } = Astro.props;
+const briefText = [
+  "A free first conversation.",
+  "A written plan and fixed quote.",
+  "Regular progress updates.",
+  "We set it live and walk you through it.",
+];
 const steps = [
   [
     "We talk.",
@@ -16,7 +23,7 @@ const steps = [
     "We launch and hand over.",
     "We set everything live and walk you through it.",
   ],
-];
+].map(([title, text], i) => [title, brief ? briefText[i] : text]);
 ---
 
 <ol class="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">

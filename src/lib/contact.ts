@@ -36,8 +36,9 @@ export const contactSchema = z.object({
     .email("Please enter a valid email address.")
     .max(254, "Please enter a valid email address."),
   projectType: z.enum(projectTypes, pick("a project type")),
-  budget: z.enum(budgets, pick("a budget range")),
-  timeline: z.enum(timelines, pick("a timeline")),
+  // Optional: Astro sends an unchosen radio group as undefined.
+  budget: z.enum(budgets, pick("a budget range")).optional(),
+  timeline: z.enum(timelines, pick("a timeline")).optional(),
   message: z
     .string({ error: "Please tell us a little about your project." })
     .trim()
@@ -55,8 +56,8 @@ const summary = (d: Inquiry) =>
     `Name: ${oneLine(d.name)}`,
     `Email: ${d.email}`,
     `Project type: ${d.projectType}`,
-    `Budget: ${d.budget}`,
-    `Timeline: ${d.timeline}`,
+    `Budget: ${d.budget ?? "Not given"}`,
+    `Timeline: ${d.timeline ?? "Not given"}`,
     "",
     d.message,
   ].join("\n");
