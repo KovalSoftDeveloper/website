@@ -231,16 +231,19 @@ const jobs = [
   .stage[data-active="apps"] > [data-kind="apps"],
   .stage[data-active="mobile"] > [data-kind="mobile"] {
     z-index: 5;
-    scale: 1.04;
     box-shadow: 0 calc(44 * var(--u)) calc(80 * var(--u)) rgb(0 0 0 / 0.55);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .stage[data-active="web"] > [data-kind="web"],
+    .stage[data-active="apps"] > [data-kind="apps"],
+    .stage[data-active="mobile"] > [data-kind="mobile"] {
+      scale: 1.04;
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     .stage > * {
       animation: none;
       transition: filter 200ms ease;
-    }
-    .stage[data-active] > * {
-      scale: none;
     }
   }
 
