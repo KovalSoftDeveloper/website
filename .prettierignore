@@ -1,0 +1,12 @@
+dist/
+.astro/
+.wrangler/
+node_modules/
+package-lock.json
+worker-configuration.d.ts
+.env*
+# hand-written planning docs and copy: leave as written
+/*.md
+docs/
+brand/
+content-drafts/

@@ -1,0 +1,6 @@
+# Pre-launch: block all crawlers. At launch, replace with:
+# User-agent: *
+# Allow: /
+# Sitemap: https://kovalsoft.ca/sitemap-index.xml
+User-agent: *
+Disallow: /
