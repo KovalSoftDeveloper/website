@@ -1,5 +1,7 @@
 ---
 const year = new Date().getFullYear();
+// min-h-6 keeps each tap target at least 24px tall (WCAG 2.2, 2.5.8).
+const link = "inline-flex min-h-6 items-center hover:text-white";
 ---
 
 <footer class="border-t-2 border-rule px-4 py-10 text-quiet sm:px-[clamp(1rem,5vw,4.5rem)]">
@@ -13,27 +15,27 @@ const year = new Date().getFullYear();
     <nav aria-label="Footer">
       <ul class="flex flex-wrap gap-x-6 gap-y-2 font-semibold">
         <li>
-          <a class="hover:text-white" href="/services">
+          <a class={link} href="/services">
             Services
           </a>
         </li>
         <li>
-          <a class="hover:text-white" href="/work">
+          <a class={link} href="/work">
             Work
           </a>
         </li>
         <li>
-          <a class="hover:text-white" href="/about">
+          <a class={link} href="/about">
             About
           </a>
         </li>
         <li>
-          <a class="hover:text-white" href="/contact">
+          <a class={link} href="/contact">
             Contact
           </a>
         </li>
         <li>
-          <a class="hover:text-white" href="/privacy">
+          <a class={link} href="/privacy">
             Privacy
           </a>
         </li>

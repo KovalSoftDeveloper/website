@@ -34,7 +34,7 @@ const choiceGroups = [
 ];
 const gutter = "px-4 sm:px-[clamp(1rem,5vw,4.5rem)]";
 const field =
-  "mt-2 w-full rounded-xl border-2 border-rule bg-char-2 px-4 py-3 text-lg text-white placeholder:text-quiet hover:border-quiet focus:border-sky focus:outline-none aria-invalid:border-white";
+  "mt-2 w-full rounded-xl border-2 border-quiet bg-char-2 px-4 py-3 text-lg text-white placeholder:text-quiet hover:border-haze focus:border-sky aria-invalid:border-white";
 ---
 
 <Base
@@ -154,7 +154,6 @@ const field =
               <fieldset
                 class:list={[g.name === "budget" ? "mt-4" : "mt-8"]}
                 aria-describedby={`${g.optional ? "optional-why " : ""}${g.name}-error`}
-                aria-invalid={fieldErrors[g.name] ? "true" : undefined}
               >
                 <legend class="text-lg font-semibold">
                   {g.legend}
@@ -164,12 +163,13 @@ const field =
                 </legend>
                 <div class="mt-3 flex flex-wrap gap-2.5">
                   {g.options.map((option) => (
-                    <label class="cursor-pointer rounded-xl border-2 border-rule px-4 py-2.5 font-semibold text-haze hover:border-quiet has-checked:border-sky has-checked:bg-sky has-checked:text-ink has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-sky">
+                    <label class="cursor-pointer rounded-xl border-2 border-quiet px-4 py-2.5 font-semibold text-haze hover:border-haze has-checked:border-sky has-checked:bg-sky has-checked:text-ink has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-sky">
                       <input
                         type="radio"
                         name={g.name}
                         value={option}
                         required={!g.optional}
+                        aria-invalid={fieldErrors[g.name] ? "true" : undefined}
                         class="sr-only"
                       />
                       {option}
@@ -318,13 +318,10 @@ const field =
         );
         const msg = target?.querySelector("[data-msg]");
         if (msg) msg.textContent = messages?.[0] ?? "";
-        const control =
-          form.querySelector<HTMLElement>(`#${name}`) ??
-          form
-            .querySelector<HTMLElement>(`[name="${name}"]`)
-            ?.closest("fieldset") ??
-          null;
-        control?.setAttribute("aria-invalid", "true");
+        // Text fields and every radio in a group (fieldset doesn't support aria-invalid).
+        for (const control of form.querySelectorAll(`[name="${name}"]`)) {
+          control.setAttribute("aria-invalid", "true");
+        }
         first ??= form.querySelector<HTMLElement>(`[name="${name}"]`);
       }
       first?.focus();
