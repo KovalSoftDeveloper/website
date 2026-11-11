@@ -1,0 +1,618 @@
+---
+// Decorative example screens (fictional businesses, each tagged "Example").
+// Drawn on an 860x760 grid; --u is one grid px at the rendered width.
+// `solo` renders one screen flat, for the service rows on narrow viewports.
+interface Props {
+  solo?: string;
+}
+const { solo } = Astro.props;
+const show = (kind: string) => !solo || solo === kind;
+const basis = solo === "web" ? 380 : 400;
+const bookings = [
+  ["A. Patel", "Consultation", "Mon 9:00", true],
+  ["J. Moreau", "Follow-up", "Mon 11:30", false],
+  ["S. Nguyen", "Fitting", "Tue 2:00", true],
+  ["R. Okafor", "Consultation", "Wed 10:15", true],
+  ["L. Brooks", "Repair", "Thu 4:45", false],
+] as const;
+const jobs = [
+  [
+    "Quoted",
+    4,
+    [
+      ["Kitchen reno", "Quote sent Tue", 76],
+      ["Deck repair", "Site visit Fri", 73],
+    ],
+  ],
+  [
+    "In progress",
+    3,
+    [
+      ["Basement", "Day 4 of 9", 64],
+      ["Roof patch", "Materials in", 70],
+    ],
+  ],
+  [
+    "Invoiced",
+    6,
+    [
+      ["Fence", "Paid", 55],
+      ["Gutters", "Due in 7 days", 61],
+    ],
+  ],
+] as const;
+---
+
+<div class:list={["wrap", { solo }]} aria-hidden="true">
+  <div
+    class="stage"
+    data-stage={solo ? undefined : ""}
+    style={`--basis:${basis}`}
+  >
+    {!solo && (
+      <div class="scr big" data-kind="apps" style="--i:0">
+        <div class="bar">
+          <i></i>
+          <i></i>
+          <i></i>
+          <span class="ex">Example</span>
+          <span class="url">app.example-studio.ca</span>
+        </div>
+        <div class="app">
+          <div class="side">
+            <b>Example Studio</b>
+            <span>Dashboard</span>
+            <span class="on">Bookings</span>
+            <span>Clients</span>
+            <span>Invoices</span>
+            <span>Settings</span>
+          </div>
+          <div class="main">
+            <p class="h4">
+              Bookings this week <em>New booking</em>
+            </p>
+            <table>
+              <tr>
+                <th>Client</th>
+                <th>Service</th>
+                <th>When</th>
+                <th>Status</th>
+              </tr>
+              {bookings.map(([who, what, when, ok]) => (
+                <tr>
+                  <td>
+                    <b>{who}</b>
+                  </td>
+                  <td>{what}</td>
+                  <td>{when}</td>
+                  <td>
+                    <span class:list={["pill", { w: !ok }]}>
+                      {ok ? "Confirmed" : "Pending"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </table>
+          </div>
+        </div>
+      </div>
+    )}
+    {show("mobile") && (
+      <div class="phone" data-kind="mobile" style="--i:1">
+        <div class="in">
+          <p class="h4">Book a time</p>
+          <p class="who">Example Studio</p>
+          <div class="slot">
+            Mon 9:00<small>Free</small>
+          </div>
+          <div class="slot on">
+            Mon 11:30<small>Selected</small>
+          </div>
+          <div class="slot">
+            Tue 2:00<small>Free</small>
+          </div>
+          <div class="cta">Confirm booking</div>
+          <span class="ex">Example</span>
+        </div>
+      </div>
+    )}
+    {show("apps") && (
+      <div class="scr tracker" data-kind="apps" style="--i:2">
+        <div class="bar">
+          <i></i>
+          <i></i>
+          <i></i>
+          <span class="ex">Example</span>
+          <span class="url">jobs.example-trades.ca</span>
+        </div>
+        <div class="tool">
+          <div class="head">
+            Example Trades: job tracker <span>Synced with accounting</span>
+          </div>
+          <div class="cols">
+            {jobs.map(([name, count, cards]) => (
+              <div>
+                <p class="h5">
+                  {name} <span>{count}</span>
+                </p>
+                {cards.map(([title, note, pct]) => (
+                  <div class="card">
+                    {title}
+                    <small>{note}</small>
+                    <i style={`width:${pct}%`} />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )}
+    {show("web") && (
+      <div class="scr web" data-kind="web" style="--i:3">
+        <div class="bar">
+          <i></i>
+          <i></i>
+          <i></i>
+          <span class="ex">Example</span>
+          <span class="url">examplebakery.ca</span>
+        </div>
+        <div class="nav">
+          <b>Example Bakery</b>
+          <span>Menu</span>
+          <span>Order</span>
+          <span>Visit</span>
+        </div>
+        <div class="hero">
+          <div>
+            <p class="h3">Fresh bread, baked every morning.</p>
+            <p class="p">Order ahead online and pick up on your way to work.</p>
+            <span class="btn">Order ahead</span>
+          </div>
+          <div class="pic">
+            <svg viewBox="0 0 64 64">
+              <path d="M10 38c0-12 10-20 22-20s22 8 22 20v6H10z"></path>
+              <path d="M22 26v12M32 22v16M42 26v12"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="cards">
+          <div>
+            Sourdough<small>Ready at 7am</small>
+          </div>
+          <div>
+            Catering<small>Office orders</small>
+          </div>
+          <div>
+            Hours<small>Tue to Sun</small>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .wrap {
+    container-type: inline-size;
+    width: 100%;
+    aspect-ratio: 860 / 760;
+  }
+  .stage {
+    --u: calc(100cqw / 860);
+    position: relative;
+    height: 100%;
+    perspective: calc(1600 * var(--u));
+    font-size: calc(14 * var(--u));
+    color: var(--color-ink);
+  }
+  .stage > * {
+    position: absolute;
+    transition:
+      scale 250ms var(--ease-out),
+      filter 250ms var(--ease-out),
+      box-shadow 250ms var(--ease-out);
+    animation: settle 1100ms var(--ease-out) both;
+    animation-delay: calc(var(--i) * 60ms);
+  }
+  /* screens start flat and lower, then settle into their angles once */
+  @keyframes settle {
+    from {
+      transform: none;
+      rotate: 0deg;
+      translate: 0 calc(40 * var(--u));
+    }
+  }
+
+  /* row open: its screen lifts, the rest recede into the charcoal */
+  .stage[data-active="web"] > :not([data-kind="web"]),
+  .stage[data-active="apps"] > :not([data-kind="apps"]),
+  .stage[data-active="mobile"] > :not([data-kind="mobile"]) {
+    filter: brightness(0.5) saturate(0.7);
+  }
+  .stage[data-active="web"] > [data-kind="web"],
+  .stage[data-active="apps"] > [data-kind="apps"],
+  .stage[data-active="mobile"] > [data-kind="mobile"] {
+    z-index: 5;
+    scale: 1.04;
+    box-shadow: 0 calc(44 * var(--u)) calc(80 * var(--u)) rgb(0 0 0 / 0.55);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stage > * {
+      animation: none;
+      transition: filter 200ms ease;
+    }
+    .stage[data-active] > * {
+      scale: none;
+    }
+  }
+
+  /* one screen, flat, inside an opened service row */
+  .wrap.solo {
+    aspect-ratio: auto;
+  }
+  .solo .stage {
+    --u: calc(100cqw / var(--basis));
+    perspective: none;
+  }
+  .solo .stage > * {
+    position: relative;
+    inset: auto;
+    margin-inline: auto;
+    transform: none;
+    rotate: none;
+    animation: none;
+    box-shadow: 0 calc(12 * var(--u)) calc(30 * var(--u)) rgb(0 0 0 / 0.4);
+  }
+
+  /* screen chrome */
+  .scr {
+    background: #fff;
+    border-radius: calc(14 * var(--u));
+    overflow: hidden;
+    box-shadow: 0 calc(30 * var(--u)) calc(60 * var(--u)) rgb(0 0 0 / 0.45);
+  }
+  .bar {
+    height: calc(34 * var(--u));
+    background: var(--color-soft);
+    display: flex;
+    align-items: center;
+    gap: calc(6 * var(--u));
+    padding: 0 calc(12 * var(--u));
+    border-bottom: 1px solid var(--color-line);
+  }
+  .bar i {
+    width: calc(10 * var(--u));
+    height: calc(10 * var(--u));
+    border-radius: 50%;
+    background: var(--color-dim);
+  }
+  .url {
+    margin-left: calc(8 * var(--u));
+    flex: 1;
+    height: calc(20 * var(--u));
+    border-radius: calc(6 * var(--u));
+    background: #fff;
+    border: 1px solid var(--color-line);
+    font-size: calc(12 * var(--u));
+    line-height: calc(16 * var(--u));
+    color: var(--color-muted);
+    padding: calc(1 * var(--u)) calc(8 * var(--u));
+  }
+  .ex {
+    font-size: calc(13 * var(--u));
+    font-weight: 700;
+    color: var(--color-sky-dark);
+    background: var(--color-sky-light);
+    padding: calc(3 * var(--u)) calc(8 * var(--u));
+    border-radius: calc(6 * var(--u));
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+  }
+  .bar .ex {
+    margin-left: calc(10 * var(--u));
+  }
+
+  /* bookings web app */
+  .big {
+    left: calc(60 * var(--u));
+    top: calc(60 * var(--u));
+    width: calc(700 * var(--u));
+    height: calc(470 * var(--u));
+    transform: rotateY(-18deg) rotateX(6deg);
+    transform-origin: left center;
+    z-index: 1;
+  }
+  .app {
+    display: grid;
+    grid-template-columns: calc(130 * var(--u)) 1fr;
+    height: calc(100% - 34 * var(--u));
+  }
+  .side {
+    background: var(--color-soft);
+    padding: calc(14 * var(--u)) calc(10 * var(--u));
+    display: flex;
+    flex-direction: column;
+    gap: calc(4 * var(--u));
+    font-size: calc(13 * var(--u));
+    color: var(--color-muted);
+  }
+  .side b {
+    color: var(--color-ink);
+    font-size: calc(14 * var(--u));
+    margin-bottom: calc(8 * var(--u));
+    padding: 0 calc(8 * var(--u));
+  }
+  .side span {
+    padding: calc(6 * var(--u)) calc(8 * var(--u));
+    border-radius: calc(6 * var(--u));
+  }
+  .side .on {
+    background: var(--color-sky-light);
+    color: var(--color-ink);
+    font-weight: 700;
+  }
+  .main {
+    max-width: calc(440 * var(--u)); /* ends before the phone covers it */
+    padding: calc(14 * var(--u)) calc(16 * var(--u));
+  }
+  .main .h4 {
+    font-size: calc(17 * var(--u));
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .main em {
+    font-style: normal;
+    font-size: calc(12 * var(--u));
+    background: var(--color-char);
+    color: #fff;
+    padding: calc(5 * var(--u)) calc(10 * var(--u));
+    border-radius: calc(6 * var(--u));
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: calc(10 * var(--u));
+    font-size: calc(12 * var(--u));
+  }
+  th {
+    text-align: left;
+    color: var(--color-muted);
+    font-weight: 600;
+    padding: calc(6 * var(--u)) calc(4 * var(--u));
+    border-bottom: 1px solid var(--color-line);
+  }
+  td {
+    padding: calc(8 * var(--u)) calc(4 * var(--u));
+    border-bottom: 1px solid var(--color-line);
+  }
+  .pill {
+    font-size: calc(11 * var(--u));
+    font-weight: 700;
+    padding: calc(3 * var(--u)) calc(8 * var(--u));
+    border-radius: 999px;
+    background: var(--color-sky-light);
+    color: var(--color-sky-dark);
+  }
+  .pill.w {
+    background: var(--color-soft);
+    color: var(--color-muted);
+  }
+
+  /* phone booking app */
+  .phone {
+    left: calc(612 * var(--u));
+    top: calc(4 * var(--u));
+    width: calc(200 * var(--u));
+    height: calc(380 * var(--u));
+    rotate: 4deg;
+    z-index: 2;
+    background: var(--color-ink);
+    border-radius: calc(32 * var(--u));
+    padding: calc(9 * var(--u));
+    box-shadow: 0 calc(30 * var(--u)) calc(60 * var(--u)) rgb(0 0 0 / 0.5);
+  }
+  .in {
+    background: #fff;
+    border-radius: calc(24 * var(--u));
+    height: 100%;
+    overflow: hidden;
+    padding: calc(26 * var(--u)) calc(14 * var(--u)) calc(14 * var(--u));
+    font-size: calc(13 * var(--u));
+    position: relative;
+  }
+  .in .h4 {
+    font-size: calc(19 * var(--u));
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .who {
+    color: var(--color-muted);
+    margin-top: calc(4 * var(--u));
+  }
+  .slot {
+    border: 1px solid var(--color-line);
+    border-radius: calc(12 * var(--u));
+    padding: calc(9 * var(--u)) calc(10 * var(--u));
+    margin-top: calc(10 * var(--u));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+  }
+  .slot small {
+    font-weight: 500;
+    font-size: calc(12 * var(--u));
+    color: var(--color-muted);
+  }
+  .slot.on {
+    border-color: var(--color-sky);
+    background: var(--color-sky-light);
+  }
+  .cta {
+    position: absolute;
+    left: calc(14 * var(--u));
+    right: calc(14 * var(--u));
+    bottom: calc(16 * var(--u));
+    background: var(--color-char);
+    color: #fff;
+    text-align: center;
+    padding: calc(11 * var(--u));
+    border-radius: calc(12 * var(--u));
+    font-weight: 700;
+  }
+  .in .ex {
+    position: absolute;
+    right: calc(12 * var(--u));
+    bottom: calc(66 * var(--u));
+  }
+
+  /* job tracker */
+  .tracker {
+    left: calc(-10 * var(--u));
+    top: calc(470 * var(--u));
+    width: calc(400 * var(--u));
+    height: calc(280 * var(--u));
+    rotate: -3deg;
+    z-index: 3;
+  }
+  .tool {
+    height: calc(100% - 34 * var(--u));
+    display: flex;
+    flex-direction: column;
+  }
+  .head {
+    background: var(--color-char);
+    color: #fff;
+    padding: calc(10 * var(--u)) calc(14 * var(--u));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+  }
+  .head span {
+    font-weight: 500;
+    color: var(--color-quiet);
+    font-size: calc(12 * var(--u));
+  }
+  .cols {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: calc(10 * var(--u));
+    padding: calc(12 * var(--u));
+    background: var(--color-soft);
+  }
+  .h5 {
+    font-size: calc(12 * var(--u));
+    color: var(--color-muted);
+    margin-bottom: calc(8 * var(--u));
+    display: flex;
+    justify-content: space-between;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: calc(8 * var(--u));
+    padding: calc(8 * var(--u));
+    font-size: calc(12 * var(--u));
+    font-weight: 700;
+    margin-bottom: calc(8 * var(--u));
+  }
+  .card small,
+  .cards small {
+    display: block;
+    font-weight: 500;
+    color: var(--color-muted);
+    margin-top: calc(3 * var(--u));
+  }
+  .card i {
+    display: block;
+    height: calc(4 * var(--u));
+    border-radius: calc(2 * var(--u));
+    background: var(--color-sky);
+    margin-top: calc(6 * var(--u));
+  }
+
+  /* bakery website */
+  .web {
+    left: calc(470 * var(--u));
+    top: calc(400 * var(--u));
+    width: calc(380 * var(--u));
+    height: calc(300 * var(--u));
+    rotate: 3deg;
+    z-index: 4;
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: calc(16 * var(--u));
+    padding: calc(12 * var(--u)) calc(18 * var(--u));
+    font-size: calc(12 * var(--u));
+    color: var(--color-muted);
+  }
+  .nav b {
+    color: var(--color-ink);
+    font-size: calc(15 * var(--u));
+    margin-right: auto;
+  }
+  .hero {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: calc(16 * var(--u));
+    padding: calc(6 * var(--u)) calc(18 * var(--u)) calc(14 * var(--u));
+  }
+  .h3 {
+    font-size: calc(26 * var(--u));
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .p {
+    font-size: calc(12 * var(--u));
+    color: var(--color-muted);
+    margin-top: calc(8 * var(--u));
+    line-height: 1.4;
+  }
+  .btn {
+    display: inline-block;
+    margin-top: calc(12 * var(--u));
+    background: var(--color-char);
+    color: #fff;
+    font-size: calc(12 * var(--u));
+    font-weight: 700;
+    padding: calc(8 * var(--u)) calc(14 * var(--u));
+    border-radius: calc(8 * var(--u));
+  }
+  .pic {
+    border-radius: calc(10 * var(--u));
+    background: var(--color-sky);
+    position: relative;
+    min-height: calc(120 * var(--u));
+  }
+  .pic svg {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: calc(70 * var(--u));
+    height: calc(70 * var(--u));
+    stroke: #fff;
+    stroke-width: 3;
+    fill: none;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: calc(10 * var(--u));
+    padding: 0 calc(18 * var(--u)) calc(16 * var(--u));
+  }
+  .cards > div {
+    background: var(--color-soft);
+    border-radius: calc(8 * var(--u));
+    padding: calc(10 * var(--u));
+    font-size: calc(12 * var(--u));
+    font-weight: 700;
+  }
+</style>

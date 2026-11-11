@@ -1,0 +1,52 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import WorkSlot from "../../components/WorkSlot.astro";
+import ClosingCta from "../../components/ClosingCta.astro";
+
+const projects = (await getCollection("projects", (p) => !p.data.draft)).sort(
+  (a, b) => (b.data.year ?? 0) - (a.data.year ?? 0),
+);
+const gutter = "px-4 sm:px-[clamp(1rem,5vw,4.5rem)]";
+---
+
+<Base
+  title="Work | KovalSoft"
+  description="Case studies of websites, web apps and software built by KovalSoft."
+>
+  <section
+    aria-labelledby="work-title"
+    class:list={[gutter, "pt-14 pb-20 lg:pt-24 lg:pb-28"]}
+  >
+    <h1
+      id="work-title"
+      class="text-[clamp(2.5rem,6vw,5rem)] leading-[1] font-bold tracking-[-0.035em]"
+    >
+      Work
+    </h1>
+    <div class="mt-12">
+      {projects.length === 0 ? (
+        <WorkSlot />
+      ) : (
+        <ul class="border-b-2 border-rule">
+          {projects.map((p) => (
+            <li class="border-t-2 border-rule">
+              <a
+                href={`/work/${p.id}`}
+                class="group grid gap-2 py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,36rem)] lg:gap-x-12"
+              >
+                <span class="text-[clamp(1.75rem,3vw,2.5rem)] leading-tight font-bold tracking-[-0.02em] group-hover:text-sky">
+                  {p.data.title}
+                </span>
+                <span class="text-lg leading-relaxed text-haze">
+                  {p.data.summary}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+  <ClosingCta />
+</Base>

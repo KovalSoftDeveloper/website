@@ -1,0 +1,44 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t-2 border-rule px-4 py-10 text-quiet sm:px-[clamp(1rem,5vw,4.5rem)]">
+  <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <a href="/" class="text-2xl font-bold tracking-[-0.02em] text-white">
+        KovalSoft
+      </a>
+      <p class="mt-2">Websites, web apps and software. Based in Ontario.</p>
+    </div>
+    <nav aria-label="Footer">
+      <ul class="flex flex-wrap gap-x-6 gap-y-2 font-semibold">
+        <li>
+          <a class="hover:text-white" href="/services">
+            Services
+          </a>
+        </li>
+        <li>
+          <a class="hover:text-white" href="/work">
+            Work
+          </a>
+        </li>
+        <li>
+          <a class="hover:text-white" href="/about">
+            About
+          </a>
+        </li>
+        <li>
+          <a class="hover:text-white" href="/contact">
+            Contact
+          </a>
+        </li>
+        <li>
+          <a class="hover:text-white" href="/privacy">
+            Privacy
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <p class="mt-8 text-sm">&copy; {year} KovalSoft</p>
+</footer>

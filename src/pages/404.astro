@@ -1,0 +1,32 @@
+---
+import Base from "../layouts/Base.astro";
+import StartButton from "../components/StartButton.astro";
+---
+
+<Base
+  title="Page not found | KovalSoft"
+  description="This page doesn't exist. Go to the KovalSoft homepage or start a project."
+>
+  <section
+    aria-labelledby="nf-title"
+    class="px-4 pt-20 pb-32 sm:px-[clamp(1rem,5vw,4.5rem)] lg:pt-32 lg:pb-40"
+  >
+    <h1
+      id="nf-title"
+      class="max-w-[14ch] text-[clamp(2.5rem,6vw,5rem)] leading-[1] font-bold tracking-[-0.035em]"
+    >
+      We can't find that page.
+    </h1>
+    <p class="mt-8 max-w-[44ch] text-xl leading-relaxed text-haze">
+      The link may be old, or the address may have a typo. Try the{" "}
+      <a
+        href="/"
+        class="font-semibold text-white underline decoration-sky decoration-2 underline-offset-[6px] hover:text-sky"
+      >
+        homepage
+      </a>
+      , or tell us what you were looking for.
+    </p>
+    <StartButton class="mt-10" />
+  </section>
+</Base>

@@ -1,0 +1,32 @@
+---
+const steps = [
+  [
+    "We talk.",
+    "A free first conversation about your business and what isn't working, without jargon or pressure.",
+  ],
+  [
+    "We plan and quote.",
+    "You get a written plan and a fixed quote before anything is built.",
+  ],
+  [
+    "We build.",
+    "You get regular progress updates, so you see the work as it takes shape.",
+  ],
+  [
+    "We launch and hand over.",
+    "We set everything live and walk you through it.",
+  ],
+];
+---
+
+<ol class="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+  {steps.map(([title, text], i) => (
+    <li class="border-t-2 border-rule pt-5">
+      <span class="text-lg font-bold text-sky tabular-nums" aria-hidden="true">
+        {i + 1}
+      </span>
+      <h3 class="mt-3 text-2xl font-bold tracking-[-0.02em]">{title}</h3>
+      <p class="mt-3 max-w-[34ch] text-lg leading-relaxed text-haze">{text}</p>
+    </li>
+  ))}
+</ol>

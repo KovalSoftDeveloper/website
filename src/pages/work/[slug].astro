@@ -1,0 +1,94 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import ClosingCta from "../../components/ClosingCta.astro";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects", (p) => !p.data.draft);
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const { title, client, summary, tech, year } = project.data;
+const gutter = "px-4 sm:px-[clamp(1rem,5vw,4.5rem)]";
+---
+
+<Base title={`${title} | KovalSoft`} description={summary}>
+  <article>
+    <header class:list={[gutter, "pt-14 pb-12 lg:pt-24"]}>
+      <a href="/work" class="font-semibold text-sky hover:text-white">
+        All work
+      </a>
+      <h1 class="mt-6 max-w-[20ch] text-[clamp(2.5rem,6vw,5rem)] leading-[1] font-bold tracking-[-0.035em]">
+        {title}
+      </h1>
+      <p class="mt-8 max-w-[52ch] text-xl leading-relaxed text-haze lg:text-2xl">
+        {summary}
+      </p>
+      <dl class="mt-10 grid gap-6 text-lg sm:grid-cols-3">
+        <div class="border-t-2 border-rule pt-3">
+          <dt class="text-quiet">Client</dt>
+          <dd class="mt-1 font-semibold">{client}</dd>
+        </div>
+        {year && (
+          <div class="border-t-2 border-rule pt-3">
+            <dt class="text-quiet">Year</dt>
+            <dd class="mt-1 font-semibold tabular-nums">{year}</dd>
+          </div>
+        )}
+        {tech.length > 0 && (
+          <div class="border-t-2 border-rule pt-3">
+            <dt class="text-quiet">Built with</dt>
+            <dd class="mt-1 font-semibold">{tech.join(", ")}</dd>
+          </div>
+        )}
+      </dl>
+    </header>
+    <div
+      class:list={[
+        gutter,
+        "prose-case max-w-[44rem] pb-16 text-lg leading-relaxed text-haze",
+      ]}
+    >
+      <Content />
+    </div>
+  </article>
+  <ClosingCta />
+</Base>
+
+<style>
+  .prose-case :global(h2) {
+    margin-top: 3rem;
+    font-size: 1.5rem;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .prose-case :global(p),
+  .prose-case :global(ul),
+  .prose-case :global(ol) {
+    margin-top: 1rem;
+  }
+  .prose-case :global(ul) {
+    list-style: disc;
+    padding-left: 1.25rem;
+  }
+  .prose-case :global(ol) {
+    list-style: decimal;
+    padding-left: 1.25rem;
+  }
+  .prose-case :global(a) {
+    color: var(--color-sky);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .prose-case :global(img) {
+    margin-top: 2rem;
+    border-radius: 1rem;
+  }
+</style>

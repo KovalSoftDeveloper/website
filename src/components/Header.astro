@@ -1,0 +1,33 @@
+---
+const links = [
+  { href: "/services", label: "Services" },
+  { href: "/#how-we-work", label: "How we work" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+---
+
+<header class="relative z-10 flex flex-wrap items-center justify-between gap-x-9 gap-y-3 px-4 pt-6 pb-2 sm:px-[clamp(1rem,5vw,4.5rem)] lg:pt-7">
+  <a
+    href="/"
+    class="text-[1.625rem] font-bold tracking-[-0.02em] text-white lg:text-3xl"
+  >
+    KovalSoft
+  </a>
+  <nav aria-label="Main">
+    <ul class="flex flex-wrap gap-x-6 gap-y-1 text-base font-semibold sm:gap-x-9 lg:text-xl">
+      {links.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            aria-current={path === href ? "page" : undefined}
+            class="text-white underline-offset-[6px] decoration-2 decoration-sky hover:underline aria-[current=page]:underline"
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>

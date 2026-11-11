@@ -1,0 +1,93 @@
+---
+import { PUBLIC_CONTACT_EMAIL } from "astro:env/client";
+import Base from "../layouts/Base.astro";
+
+const gutter = "px-4 sm:px-[clamp(1rem,5vw,4.5rem)]";
+// Owner decisions still open (retention, cross-border). Shown in every build
+// until answered; see the pre-launch checklist.
+const pending = [
+  {
+    title: "How long we keep it",
+    body: [
+      "[OWNER TO CONFIRM: how long inquiries are kept, in the inbox and in Resend.]",
+    ],
+  },
+  {
+    title: "Where it's processed",
+    body: [
+      "[OWNER TO CONFIRM: Resend may process email in the United States. Confirm the account region and the wording.]",
+    ],
+  },
+];
+const sections = [
+  {
+    title: "What we collect",
+    body: [
+      "When you send the contact form, we receive your name, email address, the type of project, your budget range, your timeline and your message. We don't collect anything else through this site.",
+      "The site doesn't use analytics, advertising or tracking cookies.",
+    ],
+  },
+  {
+    title: "Why we collect it",
+    body: [
+      "We use what you send only to reply to you and talk about your project. We don't sell it, share it for marketing, or add you to a mailing list.",
+    ],
+  },
+  {
+    title: "Who handles it",
+    body: [
+      "Your message is delivered by email through Resend, which also sends you a short confirmation. The site is hosted on Cloudflare, and Cloudflare Turnstile checks each form submission to keep out spam. These services process the data only to provide those functions.",
+    ],
+  },
+  {
+    title: "Your rights",
+    body: [
+      "You can ask to see the information we hold about you, correct it, or have it deleted. Send us a message and we'll reply within one business day.",
+    ],
+  },
+];
+---
+
+<Base
+  title="Privacy | KovalSoft"
+  description="What the KovalSoft contact form collects, why, and who handles it."
+>
+  <article class:list={[gutter, "pt-14 pb-24 lg:pt-24 lg:pb-32"]}>
+    <h1 class="text-[clamp(2.5rem,6vw,5rem)] leading-[1] font-bold tracking-[-0.035em]">
+      Privacy
+    </h1>
+    <p class="mt-6 text-lg text-quiet">Last updated November 2026</p>
+    <div class="mt-12 max-w-[44rem]">
+      {[...sections, ...pending].map((s) => (
+        <section class="border-t-2 border-rule py-8">
+          <h2 class="text-2xl font-bold tracking-[-0.01em]">{s.title}</h2>
+          {s.body.map((p) => (
+            <p class="mt-4 text-lg leading-relaxed text-haze">{p}</p>
+          ))}
+        </section>
+      ))}
+      <p class="border-t-2 border-rule pt-8 text-lg leading-relaxed text-haze">
+        Questions about privacy? Use the{" "}
+        <a
+          href="/contact"
+          class="font-semibold text-white underline decoration-sky decoration-2 underline-offset-[6px] hover:text-sky"
+        >
+          contact form
+        </a>
+        {PUBLIC_CONTACT_EMAIL && (
+          <>
+            {" "}
+            or email{" "}
+            <a
+              href={`mailto:${PUBLIC_CONTACT_EMAIL}`}
+              class="font-semibold text-white underline decoration-sky decoration-2 underline-offset-[6px] hover:text-sky"
+            >
+              {PUBLIC_CONTACT_EMAIL}
+            </a>
+          </>
+        )}
+        .
+      </p>
+    </div>
+  </article>
+</Base>

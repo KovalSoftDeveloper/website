@@ -1,1 +1,52 @@
 @import "tailwindcss";
+
+/* Charcoal & sky, Familjen Grotesk. */
+@theme {
+  --font-sans: var(--font-familjen), sans-serif;
+
+  --color-char: #23272f; /* page ground */
+  --color-char-2: #2c313b; /* raised dark surface */
+  --color-ink: #16191f; /* text on light */
+  --color-sky: #6cc4ff; /* the one accent */
+  --color-sky-dark: #1f6fb2; /* small labels on white */
+  --color-sky-light: #e3f3ff;
+  --color-soft: #f4f7fa; /* screen chrome */
+  --color-line: #e3e9f0; /* rules on light */
+  --color-muted: #5b6575; /* secondary text on light */
+  --color-dim: #c3cad5;
+  --color-haze: #d7dde6; /* body text on charcoal */
+  --color-quiet: #aeb7c4; /* secondary text on charcoal */
+  --color-rule: #4a5160; /* rules on charcoal */
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scrollbar-color: var(--color-rule) var(--color-char);
+  }
+  body {
+    background: var(--color-char);
+    color: #fff;
+    font-family: var(--font-sans);
+    font-weight: 500;
+  }
+  ::selection {
+    background: var(--color-sky);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-sky);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}

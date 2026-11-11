@@ -1,0 +1,110 @@
+---
+import Base from "../layouts/Base.astro";
+import Steps from "../components/Steps.astro";
+import ClosingCta from "../components/ClosingCta.astro";
+
+const promises = [
+  [
+    "One point of contact.",
+    "The same person from the first call to after launch.",
+  ],
+  ["A reply within one business day.", ""],
+  ["Regular updates", "while the work is underway."],
+  ["A fixed quote", "before work starts."],
+  ["Support after launch", "through our care and hosting plan."],
+];
+const gutter = "px-4 sm:px-[clamp(1rem,5vw,4.5rem)]";
+---
+
+<Base
+  title="About KovalSoft | How we work with you"
+  description="Why KovalSoft exists, how we work with clients, and what you can expect: one point of contact, a fixed quote, and support after launch."
+>
+  <section
+    aria-labelledby="about-title"
+    class:list={[gutter, "pt-14 pb-20 lg:pt-24 lg:pb-28"]}
+  >
+    <h1
+      id="about-title"
+      class="max-w-[16ch] text-[clamp(2.5rem,6vw,5rem)] leading-[1] font-bold tracking-[-0.035em]"
+    >
+      Software built properly, explained plainly.
+    </h1>
+    <div class="mt-10 grid gap-8 lg:mt-14 lg:grid-cols-[minmax(0,35rem)_1fr] lg:gap-x-16">
+      <p class="text-xl leading-relaxed text-haze lg:text-2xl lg:leading-snug">
+        Too often, businesses end up with a website or tool they don't
+        understand, built by someone they can't reach.
+      </p>
+      <p class="text-xl leading-relaxed text-white lg:text-2xl lg:leading-snug">
+        We work carefully and explain everything in plain language, so you
+        always know what you're getting and what you own.
+      </p>
+    </div>
+  </section>
+
+  <section aria-labelledby="how-title" class:list={[gutter, "py-20 lg:py-28"]}>
+    <h2
+      id="how-title"
+      class="text-[clamp(2rem,4vw,3.25rem)] leading-[1.05] font-bold tracking-[-0.03em]"
+    >
+      How we work with you
+    </h2>
+    <div class="mt-12">
+      <Steps />
+    </div>
+  </section>
+
+  <section
+    aria-labelledby="expect-title"
+    class:list={[gutter, "bg-char-2 py-20 lg:py-28"]}
+  >
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,26rem)_1fr] lg:gap-x-16">
+      <h2
+        id="expect-title"
+        class="text-[clamp(2rem,4vw,3.25rem)] leading-[1.05] font-bold tracking-[-0.03em]"
+      >
+        What you can expect
+      </h2>
+      <ul class="text-xl">
+        {promises.map(([lead, rest]) => (
+          <li class="flex gap-4 border-t-2 border-rule py-5 last:border-b-2">
+            <svg
+              class="mt-0.5 size-6 shrink-0 text-sky"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 12.5l5 5L20 6.5" />
+            </svg>
+            <p class="leading-snug">
+              <span class="font-bold">{lead}</span>{" "}
+              <span class="text-haze">{rest}</span>
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section
+    aria-labelledby="where-title"
+    class:list={[gutter, "pt-20 lg:pt-28"]}
+  >
+    <h2
+      id="where-title"
+      class="text-[clamp(2rem,4vw,3.25rem)] leading-[1.05] font-bold tracking-[-0.03em]"
+    >
+      Based in Ontario
+    </h2>
+    <p class="mt-5 max-w-[52ch] text-xl leading-relaxed text-haze">
+      We work remotely with clients anywhere, and meet in person locally when it
+      helps.
+    </p>
+  </section>
+
+  <ClosingCta />
+</Base>

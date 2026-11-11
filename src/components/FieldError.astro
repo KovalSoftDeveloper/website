@@ -1,0 +1,29 @@
+---
+// Inline field error. Hidden while empty; the contact script fills [data-msg].
+interface Props {
+  id: string;
+  for: string;
+  message?: string;
+}
+const { id, for: name, message } = Astro.props;
+---
+
+<p
+  id={id}
+  data-error-for={name}
+  class="mt-2.5 flex items-start gap-2 text-base font-semibold text-white has-[[data-msg]:empty]:hidden"
+>
+  <svg
+    class="mt-0.5 size-5 shrink-0 text-sky"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="9"></circle>
+    <path d="M12 7.5v5.5M12 16.5v.01"></path>
+  </svg>
+  <span data-msg>{message}</span>
+</p>

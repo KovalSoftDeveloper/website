@@ -1,0 +1,324 @@
+---
+import { actions, isInputError } from "astro:actions";
+import { PUBLIC_CONTACT_EMAIL, TURNSTILE_SITE_KEY } from "astro:env/client";
+import Base from "../layouts/Base.astro";
+import FieldError from "../components/FieldError.astro";
+import { budgets, projectTypes, timelines } from "../lib/contact";
+
+export const prerender = false;
+
+// Without JavaScript the form posts to the action and this page re-renders.
+const result = Astro.getActionResult(actions.contact);
+const sent = Boolean(result && !result.error);
+const fieldErrors: Record<string, string[] | undefined> =
+  result?.error && isInputError(result.error) ? result.error.fields : {};
+const formError =
+  result?.error && !isInputError(result.error) ? result.error.message : "";
+
+const choiceGroups = [
+  { name: "projectType", legend: "What do you need?", options: projectTypes },
+  { name: "budget", legend: "Budget (CAD)", options: budgets },
+  {
+    name: "timeline",
+    legend: "When do you want to start?",
+    options: timelines,
+  },
+];
+const gutter = "px-4 sm:px-[clamp(1rem,5vw,4.5rem)]";
+const field =
+  "mt-2 w-full rounded-xl border-2 border-rule bg-char-2 px-4 py-3 text-lg text-white placeholder:text-quiet hover:border-quiet focus:border-sky focus:outline-none aria-invalid:border-white";
+---
+
+<Base
+  title="Start a project | KovalSoft"
+  description="Tell us about your project. The first conversation is free and we reply within one business day."
+>
+  <section
+    aria-labelledby="contact-title"
+    class:list={[gutter, "pt-14 pb-24 lg:pt-24 lg:pb-32"]}
+  >
+    <div class="grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-x-20">
+      <div>
+        <h1
+          id="contact-title"
+          class="text-[clamp(2.5rem,6vw,5rem)] leading-[1] font-bold tracking-[-0.035em]"
+        >
+          Start a project
+        </h1>
+        <p class="mt-8 max-w-[48ch] text-xl leading-relaxed text-haze lg:text-2xl lg:leading-snug">
+          Tell us what you have in mind. The first conversation is free, and we
+          reply within one business day.
+        </p>
+
+        <div
+          data-success
+          role="status"
+          class:list={[
+            "mt-12 max-w-[44rem] rounded-2xl border-2 border-sky p-8",
+            { hidden: !sent },
+          ]}
+          tabindex="-1"
+        >
+          <h2 class="text-2xl font-bold">
+            Thanks, your message is on its way.
+          </h2>
+          <p class="mt-3 text-lg leading-relaxed text-haze">
+            We'll reply within one business day. We've also sent you a short
+            confirmation email.
+          </p>
+        </div>
+
+        <form
+          method="POST"
+          action={actions.contact}
+          novalidate
+          data-contact
+          class:list={["mt-12 max-w-[44rem]", { hidden: sent }]}
+        >
+          <p
+            data-form-error
+            role="alert"
+            tabindex="-1"
+            class:list={[
+              "mb-8 rounded-xl border-2 border-sky px-5 py-4 text-lg font-semibold",
+              { hidden: !formError },
+            ]}
+          >
+            <span data-form-message>{formError}</span>
+          </p>
+
+          <div class="grid gap-6 sm:grid-cols-2">
+            <div>
+              <label for="name" class="text-lg font-semibold">
+                Your name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                autocomplete="name"
+                required
+                maxlength="100"
+                class={field}
+                aria-invalid={fieldErrors.name ? "true" : undefined}
+                aria-describedby="name-error"
+              />
+              <FieldError
+                id="name-error"
+                for="name"
+                message={fieldErrors.name?.[0]}
+              />
+            </div>
+            <div>
+              <label for="email" class="text-lg font-semibold">
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                maxlength="254"
+                class={field}
+                aria-invalid={fieldErrors.email ? "true" : undefined}
+                aria-describedby="email-error"
+              />
+              <FieldError
+                id="email-error"
+                for="email"
+                message={fieldErrors.email?.[0]}
+              />
+            </div>
+          </div>
+
+          {choiceGroups.map((g) => (
+            <fieldset
+              class="mt-8"
+              aria-describedby={`${g.name}-error`}
+              aria-invalid={fieldErrors[g.name] ? "true" : undefined}
+            >
+              <legend class="text-lg font-semibold">{g.legend}</legend>
+              <div class="mt-3 flex flex-wrap gap-2.5">
+                {g.options.map((option) => (
+                  <label class="cursor-pointer rounded-xl border-2 border-rule px-4 py-2.5 font-semibold text-haze hover:border-quiet has-checked:border-sky has-checked:bg-sky has-checked:text-ink has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-sky">
+                    <input
+                      type="radio"
+                      name={g.name}
+                      value={option}
+                      required
+                      class="sr-only"
+                    />
+                    {option}
+                  </label>
+                ))}
+              </div>
+              <FieldError
+                id={`${g.name}-error`}
+                for={g.name}
+                message={fieldErrors[g.name]?.[0]}
+              />
+            </fieldset>
+          ))}
+
+          <div class="mt-8">
+            <label for="message" class="text-lg font-semibold">
+              Tell us about your project
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              rows="7"
+              required
+              maxlength="5000"
+              class={field}
+              placeholder="What do you want to build, and what isn't working today?"
+              aria-invalid={fieldErrors.message ? "true" : undefined}
+              aria-describedby="message-error"
+            ></textarea>
+            <FieldError
+              id="message-error"
+              for="message"
+              message={fieldErrors.message?.[0]}
+            />
+          </div>
+
+          {TURNSTILE_SITE_KEY && (
+            <div
+              class="cf-turnstile mt-8"
+              data-sitekey={TURNSTILE_SITE_KEY}
+              data-theme="dark"
+            />
+          )}
+
+          <button
+            type="submit"
+            class="group mt-8 inline-flex items-center gap-3 rounded-xl bg-sky px-7 py-4 text-xl font-bold text-ink transition-[filter] duration-200 hover:brightness-110 disabled:cursor-progress disabled:opacity-70 lg:text-2xl"
+          >
+            <span data-label>Send message</span>
+            <svg
+              class="size-6 transition-transform duration-200 ease-(--ease-out) group-hover:translate-x-1 motion-reduce:transition-none"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M4 12h15M13 6l6 6-6 6"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      <aside aria-labelledby="next-title" class="lg:pt-4">
+        <h2 id="next-title" class="text-2xl font-bold">
+          What happens next
+        </h2>
+        <ol class="mt-5 text-lg leading-relaxed text-haze">
+          <li class="border-t-2 border-rule py-4">
+            We reply within one business day to set up a free first
+            conversation.
+          </li>
+          <li class="border-t-2 border-rule py-4">
+            You get a written plan and a fixed quote before anything is built.
+          </li>
+          <li class="border-y-2 border-rule py-4">
+            One point of contact from then on, through launch and after.
+          </li>
+        </ol>
+        {PUBLIC_CONTACT_EMAIL && (
+          <p class="mt-10 text-lg text-haze">
+            Prefer email?
+            <a
+              class="mt-1 block font-semibold text-white underline decoration-sky decoration-2 underline-offset-[6px] hover:text-sky"
+              href={`mailto:${PUBLIC_CONTACT_EMAIL}`}
+            >
+              {PUBLIC_CONTACT_EMAIL}
+            </a>
+          </p>
+        )}
+        <p class="mt-10 text-lg text-haze">Based in Ontario.</p>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+{TURNSTILE_SITE_KEY && (
+  <script
+    is:inline
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer
+  />
+)}
+
+<script>
+  import { actions, isInputError } from "astro:actions";
+
+  const form = document.querySelector<HTMLFormElement>("[data-contact]");
+  const success = document.querySelector<HTMLElement>("[data-success]");
+  const formError = document.querySelector<HTMLElement>("[data-form-error]");
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = form.querySelector<HTMLButtonElement>(
+      "button[type=submit]",
+    )!;
+    const label = button.querySelector<HTMLElement>("[data-label]")!;
+    button.disabled = true;
+    label.textContent = "Sending…";
+
+    // Clear earlier errors.
+    for (const p of form.querySelectorAll<HTMLElement>("[data-error-for]")) {
+      p.querySelector("[data-msg]")!.textContent = "";
+    }
+    for (const el of form.querySelectorAll("[aria-invalid]")) {
+      el.removeAttribute("aria-invalid");
+    }
+    formError?.classList.add("hidden");
+
+    const { error } = await actions.contact(new FormData(form));
+
+    button.disabled = false;
+    label.textContent = "Send message";
+
+    if (!error) {
+      form.classList.add("hidden");
+      success?.classList.remove("hidden");
+      success?.focus();
+      return;
+    }
+
+    if (isInputError(error)) {
+      let first: HTMLElement | null = null;
+      for (const [name, messages] of Object.entries(error.fields)) {
+        const target = form.querySelector<HTMLElement>(
+          `[data-error-for="${name}"]`,
+        );
+        const msg = target?.querySelector("[data-msg]");
+        if (msg) msg.textContent = messages?.[0] ?? "";
+        const control =
+          form.querySelector<HTMLElement>(`#${name}`) ??
+          form
+            .querySelector<HTMLElement>(`[name="${name}"]`)
+            ?.closest("fieldset") ??
+          null;
+        control?.setAttribute("aria-invalid", "true");
+        first ??= form.querySelector<HTMLElement>(`[name="${name}"]`);
+      }
+      first?.focus();
+      return;
+    }
+
+    if (formError) {
+      const msg = formError.querySelector<HTMLElement>("[data-form-message]");
+      if (msg) msg.textContent = error.message;
+      formError.classList.remove("hidden");
+      formError.focus();
+    }
+    (
+      window as unknown as { turnstile?: { reset: () => void } }
+    ).turnstile?.reset();
+  });
+</script>

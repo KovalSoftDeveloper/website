@@ -13,6 +13,7 @@
     "generate-types": "wrangler types",
     "check": "astro check && eslint . && prettier --check . --ignore-path .gitignore --ignore-path .prettierignore --ignore-path .git/info/exclude",
     "lint": "eslint .",
+    "test": "node --test src/lib/*.test.ts",
     "format": "prettier --write ."
   },
   "dependencies": {
