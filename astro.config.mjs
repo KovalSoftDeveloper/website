@@ -57,6 +57,8 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    // Native file events don't arrive in a sandboxed shell; polling always sees edits.
+    server: { watch: { usePolling: true, interval: 300 } },
   },
 
   integrations: [react(), sitemap()],
