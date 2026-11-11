@@ -9,7 +9,7 @@ import cloudflare from "@astrojs/cloudflare";
 // https://astro.build/config
 export default defineConfig({
   // sitemap needs the final domain; see public/robots.txt
-  site: "https://kovalsoft.ca",
+  site: "https://kovalsoft.com",
   // Contact form. All optional so the site builds without them; the form
   // explains itself when they are missing. Values live in .env / Cloudflare.
   env: {

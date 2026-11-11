@@ -77,7 +77,7 @@ export function buildAutoReply() {
     text: [
       "Thanks for getting in touch with KovalSoft. We have your message and will reply within one business day.",
       "",
-      "If you didn't send a message through kovalsoft.ca, you can ignore this email.",
+      "If you didn't send a message through kovalsoft.com, you can ignore this email.",
       "",
       "KovalSoft",
       "Based in Ontario",
